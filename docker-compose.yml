@@ -28,9 +28,24 @@ services:
     depends_on:
       - postgres
 
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: megebase_rabbitmq
+    ports:
+      - "${RABBITMQ_PORT}:5672"
+      - "${RABBITMQ_MANAGEMENT_PORT}:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASS}
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    networks:
+      - megebase_network
+
 volumes:
   postgres_data:
   pgadmin_data:
+  rabbitmq_data:
 
 networks:
   megebase_network:
