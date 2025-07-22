@@ -42,10 +42,22 @@ services:
     networks:
       - megebase_network
 
+  redis:
+    image: redis:7.4.5-alpine
+    container_name: megebase_redis
+    ports:
+      - "${REDIS_PORT}:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - megebase_network
+    command: ["redis-server", "--requirepass", "${REDIS_PASSWORD}"]
+
 volumes:
   postgres_data:
   pgadmin_data:
   rabbitmq_data:
+  redis_data:
 
 networks:
   megebase_network:
