@@ -69,6 +69,18 @@ services:
     networks:
       - megebase_network
 
+  megebase-notification-service:
+    build:
+      context: ../megebase-notification-service
+      dockerfile: Dockerfile
+    container_name: megebase_notification_service
+    depends_on:
+      - rabbitmq
+    volumes:
+      - ../megebase-notification-service/.env:/app/.env
+    networks:
+      - megebase_network
+
   megebase-api-gateway:
     build:
       context: ../megebase-api-gateway
