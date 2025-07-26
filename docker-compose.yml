@@ -69,6 +69,24 @@ services:
     networks:
       - megebase_network
 
+  megebase-api-gateway:
+    build:
+      context: ../megebase-api-gateway
+      dockerfile: Dockerfile
+    container_name: megebase_api_gateway
+    ports:
+      - "${MEGEBASE_API_GATEWAY_PORT}:8080"
+    depends_on:
+      - megebase-identity-service
+    volumes:
+      - ../megebase-api-gateway/nginx.conf:/usr/local/openresty/nginx/conf/nginx.conf
+      - ../megebase-api-gateway/conf.d:/etc/nginx/conf.d
+      - ../megebase-api-gateway/lua:/usr/local/openresty/lua
+    environment:
+      - JWT_SECRET=${JWT_SECRET}
+    networks:
+      - megebase_network
+
 volumes:
   postgres_data:
   pgadmin_data:
