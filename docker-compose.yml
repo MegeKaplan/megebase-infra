@@ -68,6 +68,37 @@ services:
       - megebase_network
     command: server /data --console-address ":9001"
 
+  mongo:
+    image: mongo:latest
+    container_name: megebase_mongo
+    ports:
+      - "${MONGO_PORT}:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+      MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE}
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - megebase_network
+
+  mongo-express:
+    image: mongo-express
+    container_name: megebase_mongo_express
+    ports:
+      - "${ME_CONFIG_MONGODB_PORT}:8081"
+    environment:
+        ME_CONFIG_MONGODB_SERVER: megebase_mongo
+        ME_CONFIG_MONGODB_ENABLE_ADMIN: true
+        ME_CONFIG_MONGODB_ADMINUSERNAME: ${ME_CONFIG_MONGODB_ADMINUSERNAME}
+        ME_CONFIG_MONGODB_ADMINPASSWORD: ${ME_CONFIG_MONGODB_ADMINPASSWORD}
+        ME_CONFIG_BASICAUTH_USERNAME: ${ME_CONFIG_BASICAUTH_USERNAME}
+        ME_CONFIG_BASICAUTH_PASSWORD: ${ME_CONFIG_BASICAUTH_PASSWORD}
+    networks:
+      - megebase_network
+    depends_on:
+      - mongo
+
   megebase-identity-service:
     build:
       context: ../megebase-identity-service
@@ -120,6 +151,7 @@ volumes:
   rabbitmq_data:
   redis_data:
   minio_data:
+  mongo_data:
 
 networks:
   megebase_network:
