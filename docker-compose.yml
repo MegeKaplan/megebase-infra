@@ -55,7 +55,7 @@ services:
 
   minio:
     image: minio/minio:latest
-    container_name: megebase_minio
+    container_name: megebase-minio
     ports:
       - "${MINIO_PORT}:9000"
       - "${MINIO_CONSOLE_PORT}:9001"
